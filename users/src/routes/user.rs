@@ -15,7 +15,7 @@ async fn register(
     pool: web::Data<PgPool>,
     form: web::Json<RegisterRequest>,
 ) -> impl Responder {
-    let hashed_password = hash(&from.password, DEFAULT_COST).unwrap();
+    let hashed_password = hash(&form.password, DEFAULT_COST).unwrap();
     let user_id = Uuid::new_v4();
 
     let result = sqlx::query!(
@@ -28,9 +28,9 @@ async fn register(
     .await;
 
     match result {
-        Ok() => HttpResponse::Ok().json("User registered successfully"),
-        Err() => HttpResponse::InternalServerError().json("Failed to register user"),
-    }
+        Ok(_) => HttpResponse::Ok().json("User registered successfully"),
+        Err(_) => HttpResponse::InternalServerError().json("Failed to register user"),
+    }    
 }
 
 pub fn init(cfg: &mut web::ServiceConfig) {

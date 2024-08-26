@@ -3,6 +3,7 @@ use lettre::transport::smtp::authentication::Credentials;
 use lettre::transport::smtp::SmtpTransport;
 use lettre::AsyncSmtpTransport;
 use lettre::Tokio1Executor;
+use lettre::AsyncTransport;
 use std::env;
 
 pub async fn send_verification_email(to: &str, token: &str) {
@@ -19,7 +20,7 @@ pub async fn send_verification_email(to: &str, token: &str) {
 
     let creds = Credentials::new(smtp_username, smtp_password);
 
-    let mailer: AsyncSmtpTransport<Tokio1Executor> = SmtpTransport::relay(&smtp_server)
+    let mailer: AsyncSmtpTransport<Tokio1Executor> = AsyncSmtpTransport::<Tokio1Executor>::relay(&smtp_server)
         .unwrap()
         .credentials(creds)
         .build();
